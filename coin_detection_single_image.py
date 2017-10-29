@@ -57,7 +57,6 @@ def main():
     for contour in contours:
         area = cv2.contourArea(contour)
         if area > 5000:
-            print("Area = " + str(area))
             coin_type = classify_coin(area)
             #coin_details = coin_type + " " + str(area)
             #print(coin_details)
