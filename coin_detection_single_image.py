@@ -1,14 +1,11 @@
 #!/usr/bin/python
 
-#Detect coins
-
-#Example found here: http://blog.christianperone.com/2014/06/simple-and-effective-coin-segmentation-using-python-and-opencv/:
+#Detect and classify coins
 
 import numpy as np
 import glob, cv2, sys
 
 def main():
-
     image = sys.argv[1]
 
     input_img = cv2.imread(image)
@@ -57,39 +54,24 @@ def main():
     contour_img, contours, hierarchy = cv2.findContours(closed_mask_clone, cv2.RETR_EXTERNAL,
                 cv2.CHAIN_APPROX_SIMPLE)
 
-    print("There are " + str(len(contours)) + " contours in this image")
-
-    '''
-    print("contour_img = " + str(contour_img))
-    print("contours = " + str(contours))
-    print("hierarychy = " + str(hierarchy))
-    '''
     for contour in contours:
         area = cv2.contourArea(contour)
         if area > 5000:
             print("Area = " + str(area))
             coin_type = classify_coin(area)
-            coin_details = coin_type + " " + str(area)
+            #coin_details = coin_type + " " + str(area)
+            #print(coin_details)
             ellipse = cv2.fitEllipse(contour)
             cv2.ellipse(input_img, ellipse, (0,255,0), 2)
-            center_coord = get_center(contour)
-            print(center_coord)
-            #cv2.putText(input_img, str(area), (contour[0][0][0], contour[0][0][1]), cv2.FONT_HERSHEY_COMPLEX,2, 255)
             cv2.putText(input_img, coin_type, (contour[0][0][0], contour[0][0][1]), cv2.FONT_HERSHEY_COMPLEX,2, 255)
-            #cv2.putText(input_img, coin_details, center_coord, cv2.FONT_HERSHEY_COMPLEX,2, 255)
 
     display_img("final img", input_img)
+
 
 def display_img(description, img):
     cv2.imshow(description, img)
     cv2.waitKey(0)
 
-def get_center(contour):
-    pt1 = contour[0][0]
-    number_of_pts = len(contour)
-    pt2 = contour[number_of_pts/2][0]
-    center = (abs(pt1[0] - pt2[0])/2, abs(pt1[1] - pt2[1])/2)
-    return center
 
 def classify_coin(area):
     if area < 5000:
@@ -104,6 +86,7 @@ def classify_coin(area):
         return "Quarter"
     else:
         return "not a US coin"
+
 
 if __name__ == "__main__":
     main()
