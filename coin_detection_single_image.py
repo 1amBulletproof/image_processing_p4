@@ -74,7 +74,7 @@ def display_img(description, img):
 
 def classify_coin(area):
     if area < 5000:
-        return "not a US coin"
+        return "???"
     elif 5000 <= area < 8000:
         return "Dime"
     elif 8000 <= area < 10500:
@@ -84,7 +84,7 @@ def classify_coin(area):
     elif 15000 <= area < 20000:
         return "Quarter"
     else:
-        return "not a US coin"
+        return "???"
 
 
 if __name__ == "__main__":
